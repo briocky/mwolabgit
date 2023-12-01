@@ -10,20 +10,18 @@ jobs:
   upgrade-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
-
+        
       - name: Upgrade version in csproj
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ] && [ "${{ github.head_ref }}" == "master" ]; then
-            git checkout jobs
-            current_version=$(grep -oP '<Version>\K[^<]*' mwolabgit.csproj)
-            IFS='.' read -r -a version_parts <<< "$current_version"
-            new_patch=$((version_parts[2] + 1))
-            new_version="${version_parts[0]}.${version_parts[1]}.$new_patch"
-            sed -i "s/<Version>.*<\/Version>/<Version>$new_version<\/Version>/" mwolabgit.csproj
-            git add mwolabgit.csproj
-            git commit -m "Bump version to $new_version"
-            git push
-            gh pr create --base master --head jobs --title "Version upgrade"
-          fi
+          current_version=$(grep -oP '<Version>\K[^<]+' mwolabgit.csproj)
+          new_version="1.0.$((current_version + 1))"
+          sed -i "s/<Version>[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+<\/Version>/<Version>${new_version}<\/Version>/" mwolabgit.csproj
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add mwolabgit.csproj
+          git commit -m "Bump version to ${new_version}"
+          git push
