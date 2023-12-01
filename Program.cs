@@ -1,10 +1,6 @@
-﻿namespace mwolabgit;
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
 
-class Program
-{
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello, World!");
-	Console.WriteLine("Hi!");
-    }
-}
+app.MapGet("/", () => "Hello World!");
+
+app.Run();
