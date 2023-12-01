@@ -1,0 +1,26 @@
+name: Upgrade Version on Merge to Master
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Upgrade version in csproj
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ] && [ "${{ github.head_ref }}" == "master" ]; then
+            current_version=$(grep -oP '<Version>\K[^<]*' mwolabgit.csproj)
+            IFS='.' read -r -a version_parts <<< "$current_version"
+            new_patch=$((version_parts[2] + 1))
+            new_version="${version_parts[0]}.${version_parts[1]}.$new_patch"
+            sed -i "s/<Version>.*<\/Version>/<Version>$new_version<\/Version>/" mwolabgit.csproj
+            git add mwolabgit.csproj
+            git commit -m "Upgrade version to $new_version"
+            git push origin master
+          fi
