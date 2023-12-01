@@ -16,14 +16,14 @@ jobs:
       - name: Upgrade version in csproj
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ] && [ "${{ github.head_ref }}" == "master" ]; then
+            git checkout jobs
             current_version=$(grep -oP '<Version>\K[^<]*' mwolabgit.csproj)
-            echo $current_version
             IFS='.' read -r -a version_parts <<< "$current_version"
             new_patch=$((version_parts[2] + 1))
             new_version="${version_parts[0]}.${version_parts[1]}.$new_patch"
             sed -i "s/<Version>.*<\/Version>/<Version>$new_version<\/Version>/" mwolabgit.csproj
-            cat mwolabgit.csproj
             git add mwolabgit.csproj
             git commit -m "Bump version to $new_version"
-            git push origin master
+            git push
+            gh pr create --base master --head jobs --title "Version upgrade"
           fi
