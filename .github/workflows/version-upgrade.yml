@@ -15,7 +15,7 @@ jobs:
 
       - name: Upgrade version in csproj
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ] && [ "${{ github.head_ref }}" == "master" ]; then
+          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             git checkout jobs
             current_version=$(grep -oP '<Version>\K[^<]*' mwolabgit.csproj)
             IFS='.' read -r -a version_parts <<< "$current_version"
