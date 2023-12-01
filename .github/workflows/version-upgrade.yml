@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - name: Install semver
+        run: npm install -g semver
       - name: Upgrade version in csproj
         run: |
           current_version=$(grep -oP '<Version>\K[^<]+' mwolabgit.csproj)
