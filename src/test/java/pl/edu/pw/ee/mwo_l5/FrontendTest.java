@@ -61,6 +61,14 @@ public class FrontendTest {
         Assertions.assertEquals(driver.getCurrentUrl(), "http://localhost:8080/products/all");
     }
 
+    @Test
+    public void testDisplayProducts() {
+        driver.get("http://localhost:8080/products/all");
+
+        WebElement productTableInput = driver.findElement(By.id("tablee"));
+        Assertions.assertTrue(productTableInput.isDisplayed());
+    }
+
     @AfterAll
     public static void tearDown() {
         driver.quit();
