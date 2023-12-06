@@ -49,14 +49,14 @@ jobs:
           {
             "op": "add",
             "path": "/fields/System.Title",
-            "value": "Test Failure - $COMMIT_SHA"
+            "value": "Test Failure commit: $COMMIT_SHA"
           }
           EOF
           )
 
           # Send bug creation request
           curl -X PATCH \
-            -u "user:$AZURE_TOKEN" \
             -H "Content-Type: application/json-patch+json" \
+            -u "user:$AZURE_TOKEN" \
             -d "$BUG_PAYLOAD" \
-            "https://dev.azure.com/$AZURE_ORG/$AZURE_PROJECT/_apis/wit/workitems/$BUG_TYPE?api-version=7.1"
+            "https://dev.azure.com/$AZURE_ORG/$AZURE_PROJECT/_apis/wit/workitems/\$Issue?api-version=7.1-preview.3"
