@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: browser-actions/setup-firefox@v1
+      - run: firefox --version
+      
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -19,7 +22,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-
+  
       - name: Build java project
         run: ./gradlew compileJava
 
