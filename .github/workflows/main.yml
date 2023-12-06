@@ -27,15 +27,4 @@ jobs:
         run: ./gradlew compileJava
 
       - name: Test
-        run: gradle test
-        
-      - name: Save test results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: build/test-results
-
-      - name: Display test logs on failure
-        if: failure()
-        run: cat build/reports/tests/test/index.html
+        run: gradle test --info
