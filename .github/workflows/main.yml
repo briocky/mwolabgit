@@ -27,5 +27,36 @@ jobs:
         run: ./gradlew compileJava
 
       - name: Test
+        id: gradle-tests
         run: gradle test --info
-        
+
+      - name: Check for test failures
+        if: steps.gradle-tests.outcome == 'failure'
+        run: echo "Tests failed, reporting bug..."
+
+      - name: Report bug to Azure DevOps
+        if: failure()
+        run: |
+          AZURE_ORG="lab5mwo"
+          AZURE_PROJECT="lab5"
+          AZURE_TOKEN="${{ secrets.AZURE_DEVOPS_TOKEN }}"
+          
+          # Get commit SHA
+          COMMIT_SHA=$(git rev-parse HEAD)
+
+          # Create bug JSON payload
+          BUG_PAYLOAD=$(cat <<EOF
+          {
+            "op": "add",
+            "path": "/fields/System.Title",
+            "value": "Test Failure - $COMMIT_SHA"
+          }
+          EOF
+          )
+
+          # Send bug creation request
+          curl -X PATCH \
+            -u "user:$AZURE_TOKEN" \
+            -H "Content-Type: application/json-patch+json" \
+            -d "$BUG_PAYLOAD" \
+            "https://dev.azure.com/$AZURE_ORG/$AZURE_PROJECT/_apis/wit/workitems/$BUG_TYPE?api-version=7.1"
