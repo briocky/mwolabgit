@@ -60,3 +60,4 @@ jobs:
             -u "user:$AZURE_TOKEN" \
             -d "$BUG_PAYLOAD" \
             "https://dev.azure.com/$AZURE_ORG/$AZURE_PROJECT/_apis/wit/workitems/\$Issue?api-version=7.1-preview.3"
+          echo "https://dev.azure.com/$AZURE_ORG/$AZURE_PROJECT/_apis/wit/workitems/\$Issue?api-version=7.1-preview.3"
