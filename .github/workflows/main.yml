@@ -45,14 +45,7 @@ jobs:
           COMMIT_SHA=$(git rev-parse HEAD)
 
           # Create bug JSON payload
-          BUG_PAYLOAD=$(cat <<EOF
-          {
-            "op": "add",
-            "path": "/fields/System.Title",
-            "value": "Test Failure commit: $COMMIT_SHA"
-          }
-          EOF
-          )
+          BUG_PAYLOAD="[{\"op\":\"add\",\"path\":\"/fields/System.Title\",\"from\":null,\"value\":\"TestFailurecommit:$COMMIT_SHA\"}]"
 
           # Send bug creation request
           curl -X PATCH \
